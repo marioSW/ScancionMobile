@@ -2,6 +2,7 @@ package com.scancion.scancionmobile;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.text.Layout;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -34,72 +36,82 @@ import org.opencv.imgproc.Imgproc;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.scancion.scancionmobile.R.layout.show_camera_2;
+
 public class ShowCameraActivity2 extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
     // Used for logging success or failure messages
     private static final String TAG = "OCVSample::Activity";
-    private Mat mGrey, mRgba;
+    private Mat mGray, mRgba;
     // These variables are used (at the moment) to fix camera orientation from 270degree to 0degre
     Mat mRgbaF;
     Mat mRgbaT;
+    Mat mByte;
     private JavaCameraView mOpenCvCameraView;
     private Mat mIntermediateMat;
+    Button button;
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this){
         @Override
         public void onManagerConnected(int status) {
             switch (status) {
-                case LoaderCallbackInterface.SUCCESS: {
-
+                case LoaderCallbackInterface.SUCCESS:
+                {
+                    Log.i(TAG, "OpenCV loaded successfully");
                     mOpenCvCameraView.enableView();
-
-                    
-                }
-                break;
-                default: {
+                } break;
+                default:
+                {
                     super.onManagerConnected(status);
-                }
-                break;
+                } break;
             }
         }
-        //super.onManagerConnected(status);
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.show_camera_2);
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
+
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);*/
+
 
         mOpenCvCameraView = (JavaCameraView) this.findViewById(R.id.show_camera_2);
-        mOpenCvCameraView.setMinimumHeight(mOpenCvCameraView.getWidth());
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
 
-        Button button = (Button) findViewById(R.id.show_camera_2_button);
-
+        button = (Button) findViewById(R.id.show_camera_2_button);
         button.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(v.getContext(),DisplayClass.class);
+                Intent intent = new Intent(v.getContext(),DisplayClass.class);
                 startActivity(intent);
-                finish();
             }
         });
 
     }
 
 
+
     @Override
     public void onCameraViewStarted(int width, int height) {
 
-        mIntermediateMat = new Mat();
+        /*mIntermediateMat = new Mat();
         mGrey = new Mat(height, width, CvType.CV_8UC4);
         mRgba = new Mat(height, width, CvType.CV_8UC4);
         mRgbaF = new Mat(height, width, CvType.CV_8UC4);
+        mRgbaT = new Mat(width, width, CvType.CV_8UC4);*/
+
+        mGray = new Mat(height, width, CvType.CV_8UC4);
+        mRgba = new Mat(height, width, CvType.CV_8UC4);
+        mByte = new Mat(height, width, CvType.CV_8UC4);
+        mRgbaF = new Mat(height, width, CvType.CV_8UC4);
         mRgbaT = new Mat(width, width, CvType.CV_8UC4);
+
+
     }
 
     @Override
@@ -112,82 +124,20 @@ public class ShowCameraActivity2 extends AppCompatActivity implements CameraBrid
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
 
-        mRgba = inputFrame.rgba();
-        mGrey = inputFrame.gray();
+        int res = Resources.getSystem().getConfiguration().orientation;
+        //Rotate mRgba 90 degrees
+        if(res == 1) {
+            Core.transpose(mRgba, mRgbaT);
+            Imgproc.resize(mRgbaT, mRgbaF, mRgbaF.size(), 0, 0, 0);
+            Core.flip(mRgbaF, mRgba, 1);
+            mRgba = inputFrame.rgba();
+            mGray = inputFrame.gray();
 
-        CONTOUR_COLOR = new Scalar(255);
-        try {
-            MatOfKeyPoint keypoint = new MatOfKeyPoint();
-            List<KeyPoint> listpoint = new ArrayList<KeyPoint>();
-            KeyPoint kpoint = new KeyPoint();
-            Mat mask = Mat.zeros(mGrey.size(), CvType.CV_8UC1);
-            int rectanx1;
-            int rectany1;
-            int rectanx2;
-            int rectany2;
-
-            //
-            Scalar zeos = new Scalar(0, 0, 0);
-            List<MatOfPoint> contour1 = new ArrayList<MatOfPoint>();
-            List<MatOfPoint> contour2 = new ArrayList<MatOfPoint>();
-            Mat kernel = new Mat(1, 50, CvType.CV_8UC1, Scalar.all(255));
-            Mat morbyte = new Mat();
-            Mat hierarchy = new Mat();
-
-            Rect rectan2 = new Rect();//
-            Rect rectan3 = new Rect();//
-            int imgsize = mRgba.height() * mRgba.width();
-            //
-
-            if (isProcess) {
-                FeatureDetector detector = FeatureDetector
-                        .create(FeatureDetector.MSER);
-                detector.detect(mGrey, keypoint);
-                listpoint = keypoint.toList();
-                //
-                for (int ind = 0; ind < listpoint.size(); ind++) {
-                    kpoint = listpoint.get(ind);
-                    rectanx1 = (int) (kpoint.pt.x - 0.5 * kpoint.size);
-                    rectany1 = (int) (kpoint.pt.y - 0.5 * kpoint.size);
-                    // rectanx2 = (int) (kpoint.pt.x + 0.5 * kpoint.size);
-                    // rectany2 = (int) (kpoint.pt.y + 0.5 * kpoint.size);
-                    rectanx2 = (int) (kpoint.size);
-                    rectany2 = (int) (kpoint.size);
-                    if (rectanx1 <= 0)
-                        rectanx1 = 1;
-                    if (rectany1 <= 0)
-                        rectany1 = 1;
-                    if ((rectanx1 + rectanx2) > mGrey.width())
-                        rectanx2 = mGrey.width() - rectanx1;
-                    if ((rectany1 + rectany2) > mGrey.height())
-                        rectany2 = mGrey.height() - rectany1;
-                    Rect rectant = new Rect(rectanx1, rectany1, rectanx2, rectany2);
-                    Mat roi = new Mat(mask, rectant);
-                    roi.setTo(CONTOUR_COLOR);
-
-                }
-
-                Imgproc.morphologyEx(mask, morbyte, Imgproc.MORPH_DILATE, kernel);
-                Imgproc.findContours(morbyte, contour2, hierarchy,
-                        Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_NONE);
-                for (int ind = 0; ind < contour2.size(); ind++) {
-                    rectan3 = Imgproc.boundingRect(contour2.get(ind));
-                    if (rectan3.area() > 0.5 * imgsize || rectan3.area() < 100
-                            || rectan3.width / rectan3.height < 2) {
-                        Mat roi = new Mat(morbyte, rectan3);
-                        roi.setTo(zeos);
-
-                    } else
-                        Imgproc.rectangle(mRgba, rectan3.br(), rectan3.tl(),
-                                CONTOUR_COLOR);
-                }
-
-                return mRgba;
-            }
-        } catch (Exception ex){
-            Log.d(TAG, "This is the Exception"+ ex.getMessage());
+        } else {
+            mRgba = inputFrame.rgba();
+            mGray = inputFrame.gray();
         }
-
+        //mRgba = detectLanguage();
         return mRgba;
     }
 
@@ -197,7 +147,6 @@ public class ShowCameraActivity2 extends AppCompatActivity implements CameraBrid
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
 
-        isProcess=false;
     }
 
     @Override
@@ -221,5 +170,75 @@ public class ShowCameraActivity2 extends AppCompatActivity implements CameraBrid
             mOpenCvCameraView.disableView();
     }
 
+    public Mat detectLanguage(){
+        CONTOUR_COLOR = new Scalar(255);
+        MatOfKeyPoint keypoint = new MatOfKeyPoint();
+        List<KeyPoint> listpoint = new ArrayList<KeyPoint>();
+        KeyPoint kpoint = new KeyPoint();
+        Mat mask = Mat.zeros(mGray.size(), CvType.CV_8UC1);
+        int rectanx1;
+        int rectany1;
+        int rectanx2;
+        int rectany2;
+
+        //
+        Scalar zeos = new Scalar(0, 0, 0);
+        List<MatOfPoint> contour1 = new ArrayList<MatOfPoint>();
+        List<MatOfPoint> contour2 = new ArrayList<MatOfPoint>();
+        Mat kernel = new Mat(1, 50, CvType.CV_8UC1, Scalar.all(255));
+        Mat morbyte = new Mat();
+        Mat hierarchy = new Mat();
+
+        Rect rectan2 = new Rect();//
+        Rect rectan3 = new Rect();//
+        int imgsize = mRgba.height() * mRgba.width();
+
+        if (isProcess) {
+            FeatureDetector detector = FeatureDetector
+                    .create(FeatureDetector.MSER);
+            detector.detect(mGray, keypoint);
+            listpoint = keypoint.toList();
+            //
+            for (int ind = 0; ind < listpoint.size(); ind++) {
+                kpoint = listpoint.get(ind);
+                rectanx1 = (int) (kpoint.pt.x - 0.5 * kpoint.size);
+                rectany1 = (int) (kpoint.pt.y - 0.5 * kpoint.size);
+                // rectanx2 = (int) (kpoint.pt.x + 0.5 * kpoint.size);
+                // rectany2 = (int) (kpoint.pt.y + 0.5 * kpoint.size);
+                rectanx2 = (int) (kpoint.size);
+                rectany2 = (int) (kpoint.size);
+                if (rectanx1 <= 0)
+                    rectanx1 = 1;
+                if (rectany1 <= 0)
+                    rectany1 = 1;
+                if ((rectanx1 + rectanx2) > mGray.width())
+                    rectanx2 = mGray.width() - rectanx1;
+                if ((rectany1 + rectany2) > mGray.height())
+                    rectany2 = mGray.height() - rectany1;
+                Rect rectant = new Rect(rectanx1, rectany1, rectanx2, rectany2);
+                Mat roi = new Mat(mask, rectant);
+                roi.setTo(CONTOUR_COLOR);
+
+            }
+
+            Imgproc.morphologyEx(mask, morbyte, Imgproc.MORPH_DILATE, kernel);
+            Imgproc.findContours(morbyte, contour2, hierarchy,
+                    Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_NONE);
+            for (int ind = 0; ind < contour2.size(); ind++) {
+                rectan3 = Imgproc.boundingRect(contour2.get(ind));
+                if (rectan3.area() > 0.5 * imgsize || rectan3.area() < 100
+                        || rectan3.width / rectan3.height < 2) {
+                    Mat roi = new Mat(morbyte, rectan3);
+                    roi.setTo(zeos);
+
+                } else
+                    Imgproc.rectangle(mRgba, rectan3.br(), rectan3.tl(),
+                            CONTOUR_COLOR);
+            }
+
+            return mRgba;
+        }
+        return mRgba;
+    }
 
 }

@@ -25,16 +25,13 @@ import java.io.InputStreamReader;
 
 public class DisplayClass extends AppCompatActivity {
 
-
-
     private WebView wv;
     private String URL;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_content_display_class);
         wv=(WebView)findViewById(R.id.webView);
         //wv.setWebViewClient(new MyBrowser());
 
@@ -59,7 +56,7 @@ public class DisplayClass extends AppCompatActivity {
 
 
         wv.loadUrl(getURL());
-        setContentView(R.layout.activity_content_display_class);
+
 
        /* try {
             Runtime.getRuntime().exec("cmd /c start C:\\Users\\Dharsha\\Desktop\\sliit doc\\4th year\\semester 2\\CDAP\\atd\\run-lowmem.bat");

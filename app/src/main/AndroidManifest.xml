@@ -46,7 +46,7 @@
         <activity
             android:name=".ShowCameraActivity2"
             android:label="@string/title_activity_show_camera2"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
