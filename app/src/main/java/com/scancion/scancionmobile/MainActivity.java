@@ -3,17 +3,13 @@ package com.scancion.scancionmobile;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.core.Mat;
-
-public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +24,12 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
             public void onClick(View view) {
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 //        .setAction("Action", null).show();
-
-                Intent intent= new Intent(view.getContext(),ShowCameraActivity.class);
+                Intent intent= new Intent(view.getContext(),ShowCameraActivity2.class);
                 startActivity(intent);
-
             }
         });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -58,18 +53,5 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onCameraViewStarted(int width, int height) {
 
-    }
-
-    @Override
-    public void onCameraViewStopped() {
-
-    }
-
-    @Override
-    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        return null;
-    }
 }

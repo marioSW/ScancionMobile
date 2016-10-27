@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".DisplayClass">
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/web_view_grammar"
+        android:layout_centerHorizontal="true" />
+
+    <!--<EditText-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/editText"-->
+    <!--android:hint="Enter Text"-->
+    <!--android:focusable="true"-->
+    <!--android:textColorHighlight="#ff7eff15"-->
+    <!--android:textColorHint="#ffff25e6"-->
+    <!--android:layout_marginTop="46dp"-->
+    <!--android:layout_below="@+id/imageView"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentStart="true"-->
+    <!--android:layout_alignRight="@+id/imageView"-->
+    <!--android:layout_alignEnd="@+id/imageView" />-->
+
+    <!--    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:src="@drawable/abc"
+            android:layout_below="@+id/textView"
+            android:layout_centerHorizontal="true" />-->
+
+    <!-- <Button
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Enter"
+         android:id="@+id/button"
+         android:layout_alignTop="@+id/editText"
+         android:layout_toRightOf="@+id/imageView"
+         android:layout_toEndOf="@+id/imageView" />-->
+
+</RelativeLayout>

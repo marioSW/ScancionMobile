@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:opencv="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    tools:context=".ShowCameraActivity2">
+
+    <org.opencv.android.JavaCameraView
+        android:layout_width="match_parent"
+        android:layout_height="458dp"
+        android:id="@+id/show_camera_2"
+        opencv:show_fps="true"
+        opencv:camera_id="any" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@android:drawable/ic_menu_camera"
+        android:id="@+id/show_camera_2_button"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.32"
+        android:gravity="bottom" />
+
+</LinearLayout>
