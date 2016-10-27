@@ -6,12 +6,6 @@
     android:orientation="vertical"
     tools:context=".DisplayClass">
 
-    <include
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout="@layout/web_view_grammar"
-        android:layout_centerHorizontal="true" />
-
     <!--<EditText-->
     <!--android:layout_width="wrap_content"-->
     <!--android:layout_height="wrap_content"-->
@@ -44,4 +38,10 @@
          android:layout_toRightOf="@+id/imageView"
          android:layout_toEndOf="@+id/imageView" />-->
 
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/webView"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

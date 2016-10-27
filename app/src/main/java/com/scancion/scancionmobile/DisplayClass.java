@@ -35,7 +35,6 @@ public class DisplayClass extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         wv=(WebView)findViewById(R.id.webView);
         //wv.setWebViewClient(new MyBrowser());
 
