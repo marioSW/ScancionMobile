@@ -32,7 +32,7 @@ public class SaveBitmap {
         n = generator.nextInt(n);
         fname = "Image-" + n + ".jpg";
         File file = new File(myDir, fname);
-        Log.i(TAG, "" + file);
+        Log.i(TAG, "" + file.getName());
         if (file.exists())
             file.delete();
         try {
@@ -41,6 +41,7 @@ public class SaveBitmap {
             out.flush();
             out.close();
         } catch (Exception e) {
+            Log.e(TAG,"Exception with file output stream");
             e.printStackTrace();
         }
 

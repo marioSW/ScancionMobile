@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 }
+                startActivityForResult(photoCaptureIntent, requestCode);
                 /*String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
                 folder specofics
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 File image = new File(imagesFolder, "PHOTO_" + timeStamp + ".jpg");
                 System.out.println(image);
                 uriSavedImage = Uri.fromFile(image); */
-                startActivityForResult(photoCaptureIntent, requestCode);
+
                 //Snackbar.make(view, "Image recieved    "+fileName.getName() , Snackbar.LENGTH_LONG)
                 //        .setAction("Action", null).show();
                 //System.out.println(uriSavedImage);
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(this.requestCode == requestCode && resultCode == RESULT_OK) {
 
-            Log.d(TAG, "Save initialized RESULT_OK");
+            Log.v(TAG, "Save initialized RESULT_OK");
 
             Bitmap bitmap,bmgray1,bmgray2,
                     bmgray3,bmthresh1,bmthresh2,
@@ -102,9 +103,10 @@ public class MainActivity extends AppCompatActivity {
                 bmthresh1 =Processing.toGrayscaleTwo(bitmap);
                 //bmthresh2=CVProcessing.globalThresholding(bitmap); CV PROCCESSING HAS AN ERROR
                 save.savebitmap(TAG, bmthresh1);
-                Intent intent = new Intent(this.getApplicationContext(),DisplayClass.class);
+                Intent intent = new Intent(this.getApplicationContext(),ImageSegmentationActivity.class);
+
                 intent.putExtra("IMAGE_LOCATION_NAME",save.getFname());
-                intent.putExtra("IMAGE_LOCATION_DIRECTORY",save.getMyDir());
+                //intent.putExtra("IMAGE_LOCATION_DIRECTORY",save.getMyDir());
                 startActivity(intent);
 
 

@@ -51,6 +51,7 @@ public class ShowCameraActivity2 extends AppCompatActivity implements CameraBrid
     private Mat mIntermediateMat;
     Button button;
 
+
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this){
         @Override
         public void onManagerConnected(int status) {
@@ -119,7 +120,6 @@ public class ShowCameraActivity2 extends AppCompatActivity implements CameraBrid
         mRgba.release();
     }
 
-    private Scalar CONTOUR_COLOR;
     boolean isProcess=true;
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
@@ -170,6 +170,7 @@ public class ShowCameraActivity2 extends AppCompatActivity implements CameraBrid
             mOpenCvCameraView.disableView();
     }
 
+    private Scalar CONTOUR_COLOR;
     public Mat detectLanguage(){
         CONTOUR_COLOR = new Scalar(255);
         MatOfKeyPoint keypoint = new MatOfKeyPoint();

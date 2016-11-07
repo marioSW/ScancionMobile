@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.scancion.scancionmobile"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -17,6 +17,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
 }
 
 dependencies {
@@ -26,5 +27,6 @@ dependencies {
     compile 'com.android.support:design:24.2.0'
     compile project(':openCVLibrary310')
     compile 'com.rmtheis:tess-two:6.0.3'
+    //compile 'com.rmtheis:tess-two:5.4.1'
 
 }
